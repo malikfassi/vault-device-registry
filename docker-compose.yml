@@ -16,7 +16,7 @@ services:
       - DATABASE_PASSWORD=postgres
       - DATABASE_PORT=5432
     ports:
-      - 5000:5000
+      - 5002:5002
     depends_on:
       - vault-device-registry-db
     command: "/app/wait_run.sh"

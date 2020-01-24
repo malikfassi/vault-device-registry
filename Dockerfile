@@ -18,6 +18,6 @@ COPY --from=intermediate /app/.venv /app/.venv
 
 RUN /app/install_run_deps.sh
 # default port for dev env
-EXPOSE 5000
+EXPOSE 5002
 
 CMD [ "/app/run.sh" ]

@@ -41,7 +41,7 @@ Flask service using [ledgercommon](https://github.com/LedgerHQ/python-ledgercomm
 ```sh
 $ PYPI_KEY=<YOUR_PYPI_KEY> pipenv install
 $ ./run_dev.sh &
-$ curl localhost:5000/_health
+$ curl localhost:5002/_health
 ```
 
 ### Build docker image
@@ -49,7 +49,7 @@ $ curl localhost:5000/_health
 ```sh
 $ docker build --no-cache -t ledgerhq/vault-device-registry:local --build-arg PYPI_KEY=<YOUR_PYPI_KEY> .
 $ docker-compose down && DOCKER_IMAGE_VERSION=local docker-compose up -d
-$ curl localhost:5000/_health
+$ curl localhost:5002/_health
 ```
 
 ### CircleCI setup
