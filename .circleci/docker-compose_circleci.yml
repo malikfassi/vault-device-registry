@@ -1,0 +1,18 @@
+version: '2.4'
+
+services:
+  postgres-server:
+    image: circleci/postgres:$POSTGRES_VERSION
+    environment:
+      - POSTGRES_DB
+      - PGDATABASE=${POSTGRES_DB}
+      - POSTGRES_USER
+      - PGUSER=${POSTGRES_USER}
+      - POSTGRES_PASSWORD
+      - PGPASSWORD=${POSTGRES_PASSWORD}
+    healthcheck:
+      test: "psql -h postgres-server -c 'select 1;'"
+      interval: 2s
+      timeout: 2s
+      retries: 5
+      start_period: 1s

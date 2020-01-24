@@ -1,0 +1,96 @@
+version: 2.1
+
+orbs:
+  docker: ledger/docker@volatile
+
+jobs:
+  lint_and_test:
+    docker:
+      - image: circleci/python:3.8
+    working_directory: ~/vault-device-registry
+    steps:
+      - checkout
+      - restore_cache:
+          keys:
+            - vault-device-registry-pip-cache-v1-{{ checksum "Pipfile.lock" }}
+            - vault-device-registry-pip-cache-v1-
+      - run:
+          name: Install dependencies
+          command: |
+            pip install -U pipenv
+            pipenv install --dev
+      - run:
+          name: Lint code
+          command: pipenv run lint
+      - run:
+          name: Run unit tests
+          command: pipenv run test
+      - run:
+          name: Run service
+          command: ./run_dev.sh
+          background: true
+      - run:
+          name: Test service
+          command: |
+            sleep 5
+            curl localhost:5000/_health
+      - save_cache:
+          key: vault-device-registry-pip-cache-v1-{{ checksum "Pipfile.lock" }}
+          paths:
+            - pipenv --venv
+            - "~/.cache/pip"
+
+workflows:
+  build_test_and_publish:
+    jobs:
+      - lint_and_test:
+          # required
+          # see : https://circleci.com/docs/2.0/workflows/#executing-workflows-for-a-git-tag
+          filters:
+            tags:
+              only: /.*/
+      - docker/build_image:
+          # Generate a deploy key on github and add it to this repo's env vars
+          docker_build_args: --build-arg PYPI_KEY
+          requires:
+            - lint_and_test
+          filters:
+            branches:
+              only:
+                - develop
+                - master
+            tags:
+              only: /.*/
+      - docker/test_image:
+          docker_compose_configuration: docker-compose_circleci.yml
+          docker_compose_env_vars: |-
+            POSTGRES_VERSION=11.1-alpine-ram
+            POSTGRES_USER=postgres
+            POSTGRES_PASSWORD=postgres
+            POSTGRES_DB=test_db
+          # each goss run needs to start from a fresh docker-compose environment
+          docker_compose_single_use: true
+          dgoss_docker_env_vars: |-
+            HOST=localhost
+            PROCESS_TIMEOUT=30
+            MAX_NUMBER_OF_PROCESSES=4
+            MIN_NUMBER_OF_PROCESSES=2
+          requires:
+            - docker/build_image
+          filters:
+            branches:
+              only:
+                - develop
+                - master
+            tags:
+              only: /.*/
+      - docker/publish_image:
+          requires:
+            - docker/test_image
+          filters:
+            branches:
+              only:
+                - develop
+                - master
+            tags:
+              only: /.*/

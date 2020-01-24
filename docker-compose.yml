@@ -1,0 +1,31 @@
+version: '3.5'
+
+services:
+  vault-device-registry:
+    image: ledgerhq/vault-device-registry:${DOCKER_IMAGE_VERSION:-develop}
+    environment:
+      - APP_NAME=vault_device_registry
+      - HOST=0.0.0.0
+      - PROCESS_TIMEOUT=120
+      - MAX_NUMBER_OF_PROCESSES=4
+      - MIN_NUMBER_OF_PROCESSES=2
+      - FLASK_DEBUG=1
+      - DATABASE_HOST=vault-device-registry-db
+      - DATABASE_SCHEMA=test_db
+      - DATABASE_USER=postgres
+      - DATABASE_PASSWORD=postgres
+      - DATABASE_PORT=5432
+    ports:
+      - 5000:5000
+    depends_on:
+      - vault-device-registry-db
+    command: "/app/wait_run.sh"
+
+  vault-device-registry-db:
+    image: postgres:11.1
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: test_db
+    ports:
+      - 15435:5432
