@@ -24,7 +24,8 @@ pytest-sugar = "*"
 Flask = "*"
 Flask-Cors = "*"
 uWSGI = "*"
-python-ledgercommon = {version="==1.1.0", index="fury"}
+python-ledgercommon = {version = "==1.1.0",index = "fury"}
+sqlalchemy = "*"
 
 [scripts]
 test = "py.test"
