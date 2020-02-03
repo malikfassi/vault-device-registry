@@ -12,7 +12,7 @@ PRODUCTION: &production
   <<: *common
   DATABASE:
     ENGINE: 'PostgreSQL'
-    SCHEMA: 'test_db'
+    SCHEMA: 'device_registry'
     HOST: 'localhost'
     USER: 'postgres'
     PASSWORD: 'postgres'
