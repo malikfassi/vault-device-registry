@@ -22,11 +22,13 @@ class BaseModelMixin(TimestampMixin, object):
 
     def save(self):
         try:
-            db.session.add(self)  # Adds new User record to database
+            db.session.add(self)  # Adds new object record to database
             db.session.commit()  # Commits all changes
         except IntegrityError as e:
             if hasattr(e.orig, 'pgcode') and e.orig.pgcode == UNIQUE_VIOLATION:
                 raise ModelAlreadyExistException(f"Model {self.__class__.__name__} already exists")
+            else:
+                raise e
 
     @classmethod
     def get(cls, *args, **kwargs):
