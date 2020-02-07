@@ -1,9 +1,9 @@
 from ledgercommon.flask.routes import RoutesRegistrar as BaseRoutesRegistrar
 
-from src.status_controller import StatusController
-from src.device_controller import DeviceController
+from src.devices.DevicesController import DevicesController
+from src.status.StatusController import StatusController
 
 
 class RoutesRegistrar(BaseRoutesRegistrar):
 
-    BLUEPRINTS: list = [StatusController.status_routes, DeviceController.device_routes]
+    BLUEPRINTS: list = [StatusController.status_routes, DevicesController.devices_routes]

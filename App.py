@@ -4,10 +4,12 @@ from ledgercommon.flask import Flask, HTTPExceptionsHandler, get_correlation_id
 from ledgercommon.flask.config import ConfigService
 from ledgercommon.flask.routes import RequestsFilter, FUNCTION_FILTERS
 
-from src.routes.registrar import RoutesRegistrar
-
 from flask_cors import CORS
 from flask import g
+from flask_sqlalchemy import SQLAlchemy
+
+
+db = SQLAlchemy()
 
 
 class App(Flask):
@@ -45,11 +47,9 @@ class App(Flask):
             return self.execute_teardown_request(exc)
 
     def execute_before_request(self):
-        # self.db.connect_db()
-        self.filter_request()
+        pass
 
     def execute_teardown_request(self, exc):
-        # self.db.close_db()
         pass
 
     def filter_request(self):
@@ -67,11 +67,22 @@ class App(Flask):
         )
 
     def init_db(self):
-        # DB initialization
         self.logger.info("Initialize database", config=self.config["DATABASE"])
-        pass
+        config = self.config_service.get("DATABASE")
+        POSTGRES_USER = config['USER']
+        POSTGRES_PW = config['PASSWORD']
+        POSTGRES_URL = f"{config['HOST']}:{config['PORT']}"
+        POSTGRES_DB = config['SCHEMA']
+
+        self.config['SQLALCHEMY_DATABASE_URI'] = f'postgresql+psycopg2://{POSTGRES_USER}:{POSTGRES_PW}@{POSTGRES_URL}/{POSTGRES_DB}'
+        db.init_app(self)
+        # DB initialization
+        with self.app_context():
+            from src.devices.Device import Device
+            db.create_all()
 
     def register_routes(self):
         # Routes registration
+        from src.routes.registrar import RoutesRegistrar
         route_registrar = RoutesRegistrar(self)
         route_registrar.register()

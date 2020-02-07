@@ -4,7 +4,7 @@ url = "https://pypi.python.org/simple"
 verify_ssl = true
 
 [[source]]
-url = "https://${PYPI_KEY}:@pypi.fury.io/ybadiss/"
+url = "https://${PYPI_DEPLOY_TOKEN}:@pypi.fury.io/ledger/"
 verify_ssl = true
 name = "fury"
 
@@ -24,14 +24,15 @@ pytest-sugar = "*"
 Flask = "*"
 Flask-Cors = "*"
 uWSGI = "*"
-python-ledgercommon = {version = "==1.1.0",index = "fury"}
+python-ledgercommon = {version = "==1.1.11",index = "fury"}
 sqlalchemy = "*"
+marshmallow-sqlalchemy = "*"
+flask-sqlalchemy = "*"
 psycopg2 = "*"
 
 [scripts]
 test = "py.test"
 lint = "./lint.sh"
-format = "./format.sh"
 run = "./run.sh"
 run_dev = "./run_dev.sh"
 
