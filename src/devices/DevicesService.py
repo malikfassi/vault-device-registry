@@ -1,16 +1,16 @@
 from src.devices.Device import Device
-from src.devices.DevicesParemeters import DeviceRegisterParameters
+from src.devices.DevicesParemeters import DeviceRegisterParameters, DeviceSearchParameters
 
 
 class DevicesService:
 
     @classmethod
-    def register(cls, request_args: DeviceRegisterParameters):
+    def register(cls, device_data: DeviceRegisterParameters):
         # Create an instance of the Device class
-        new_device = Device(workspace=request_args.workspace, pub_key=request_args.pub_key)
+        new_device = Device(workspace=device_data.workspace, pub_key=device_data.pub_key)
         new_device.save()
         return True
 
     @classmethod
-    def get_workspaces(cls, pub_key: str):
-        return [device.workspace for device in Device.get(pub_key=pub_key)]
+    def get_workspaces(cls, device_data: DeviceSearchParameters):
+        return [device.workspace for device in Device.get(pub_key=device_data.pub_key)]

@@ -20,4 +20,4 @@ class DevicesController:
     @staticmethod
     @devices_routes.route("/device", methods=["GET"], request_model=DeviceSearchParameters)
     def get_workspaces(request_args: DeviceSearchParameters):
-        return DevicesController.devices_service.get_workspaces(request_args.pub_key)
+        return DevicesController.devices_service.get_workspaces(request_args)
