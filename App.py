@@ -6,10 +6,8 @@ from ledgercommon.flask.routes import RequestsFilter, FUNCTION_FILTERS
 
 from flask_cors import CORS
 from flask import g
-from flask_sqlalchemy import SQLAlchemy
 
-
-db = SQLAlchemy()
+from src.common.Database import Database
 
 
 class App(Flask):
@@ -22,6 +20,7 @@ class App(Flask):
         self.config_service = ConfigService()
         self.config_service.initialize(self.config)
         self.logger = self.config_logger()
+        self.db = None
         self.config_app()
 
         CORS(
@@ -58,7 +57,7 @@ class App(Flask):
             g.user = user
 
     def config_app(self):
-        self.db = self.init_db()
+        self.init_db()
 
     def config_logger(self):
         return setup_logging(
@@ -67,19 +66,9 @@ class App(Flask):
         )
 
     def init_db(self):
-        self.logger.info("Initialize database", config=self.config["DATABASE"])
-        config = self.config_service.get("DATABASE")
-        POSTGRES_USER = config['USER']
-        POSTGRES_PW = config['PASSWORD']
-        POSTGRES_URL = f"{config['HOST']}:{config['PORT']}"
-        POSTGRES_DB = config['SCHEMA']
-
-        self.config['SQLALCHEMY_DATABASE_URI'] = f'postgresql+psycopg2://{POSTGRES_USER}:{POSTGRES_PW}@{POSTGRES_URL}/{POSTGRES_DB}'
-        db.init_app(self)
-        # DB initialization
-        with self.app_context():
-            from src.devices.Device import Device
-            db.create_all()
+        self.db = Database()
+        self.logger.info("Initialize database", config=self.config['DATABASE'])
+        self.db.initialize(self)
 
     def register_routes(self):
         # Routes registration

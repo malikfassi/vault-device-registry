@@ -2,11 +2,10 @@ import sqlalchemy as sa
 
 from sqlalchemy import UniqueConstraint
 
-from App import db
-from src.common.BaseModel import BaseModelMixin
+from src.common.BaseModel import BaseModel
 
 
-class Device(BaseModelMixin, db.Model):
+class Device(BaseModel):
 
     pub_key = sa.Column(sa.String)
     workspace = sa.Column(sa.String)
@@ -15,4 +14,4 @@ class Device(BaseModelMixin, db.Model):
                       )
 
     def __repr__(self):
-        return "<Device(name={self.pub_key!r})>".format(self=self)
+        return f"<Device(name={self.pub_key})>"
