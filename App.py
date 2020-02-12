@@ -66,9 +66,7 @@ class App(Flask):
         )
 
     def init_db(self):
-        self.db = Database()
-        self.logger.info("Initialize database", config=self.config['DATABASE'])
-        self.db.initialize(self)
+        self.db = Database(app=self)
 
     def register_routes(self):
         # Routes registration

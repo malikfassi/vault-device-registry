@@ -1,4 +1,4 @@
-from ledgercommon.schema import dataclass, BaseModel
+from ledgercommon.schema import BaseModel, dataclass
 
 
 @dataclass

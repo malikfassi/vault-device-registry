@@ -1,7 +1,7 @@
+import sqlalchemy as sa
 from psycopg2.errorcodes import UNIQUE_VIOLATION
 from sqlalchemy.exc import IntegrityError
-from sqlalchemy.ext.declarative import declared_attr, declarative_base
-import sqlalchemy as sa
+from sqlalchemy.ext.declarative import declarative_base, declared_attr
 from sqlalchemy.sql.functions import now
 
 from src.common.Database import Database
@@ -26,6 +26,7 @@ class BaseModel(TimestampMixin, Base):
 
     def save(self):
         try:
+
             Database().session.add(self)  # Adds new object record to database
             Database().session.commit()  # Commits all changes
         except IntegrityError as e:

@@ -29,6 +29,7 @@ sqlalchemy = "*"
 marshmallow-sqlalchemy = "*"
 flask-sqlalchemy = "*"
 psycopg2 = "*"
+pyyaml = "*"
 
 [scripts]
 test = "py.test"
