@@ -1,5 +1,8 @@
 from src.devices.Device import Device
-from src.devices.DevicesParemeters import DeviceRegisterParameters, DeviceSearchParameters
+from src.devices.DevicesParemeters import (
+    DeviceRegisterParameters,
+    DeviceSearchParameters,
+)
 
 
 class DevicesService:
