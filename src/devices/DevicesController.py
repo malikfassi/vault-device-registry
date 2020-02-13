@@ -16,11 +16,22 @@ class DevicesController:
     devices_service = DevicesService()
 
     @staticmethod
-    @devices_routes.route("/register", methods=["POST"], request_model=DeviceRegisterParameters)
+    @devices_routes.route(
+        "/register", methods=["POST"], request_model=DeviceRegisterParameters
+    )
     def register_device(request_args: DeviceRegisterParameters):
         DevicesController.devices_service.register(request_args)
 
     @staticmethod
-    @devices_routes.route("/device", methods=["GET"], request_model=DeviceSearchParameters)
+    @devices_routes.route(
+        "/deactivate", methods=["POST"], request_model=DeviceRegisterParameters
+    )
+    def deactivate_device(request_args: DeviceRegisterParameters):
+        DevicesController.devices_service.deactivate(request_args)
+
+    @staticmethod
+    @devices_routes.route(
+        "/device", methods=["GET"], request_model=DeviceSearchParameters
+    )
     def get_workspaces(request_args: DeviceSearchParameters):
         return DevicesController.devices_service.get_workspaces(request_args)

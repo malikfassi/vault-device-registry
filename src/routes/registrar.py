@@ -6,4 +6,7 @@ from src.status.StatusController import StatusController
 
 class RoutesRegistrar(BaseRoutesRegistrar):
 
-    BLUEPRINTS: list = [StatusController.status_routes, DevicesController.devices_routes]
+    BLUEPRINTS: list = [
+        StatusController.status_routes,
+        DevicesController.devices_routes,
+    ]
