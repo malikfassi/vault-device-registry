@@ -8,13 +8,11 @@ from sqlalchemy import engine_from_config
 
 @singleton
 class Database(SQLAlchemy):
-    def __init__(self, config=None, app=None):
+    def __init__(self, config=None):
         super().__init__()
         self.logger = logging.getLogger(__name__)
         self.config = config or ConfigService().get("DATABASE")
         self.uri = self._get_uri()
-        if app is not None:
-            self.initialize_app(app)
         self.logger.info(f"Initialize database {self.config}")
 
     def initialize_app(self, app):
@@ -27,13 +25,11 @@ class Database(SQLAlchemy):
     def create_all_tables(self):
         engine = self.get_engine_from_conf()
         from src.common.BaseModel import Base
-
         Base.metadata.create_all(bind=engine)
 
     def drop_all_tables(self):
         engine = self.get_engine_from_conf()
         from src.common.BaseModel import Base
-
         Base.metadata.drop_all(bind=engine)
 
     def _get_uri(self):

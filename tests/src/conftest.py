@@ -23,7 +23,6 @@ def base():
     app.init_db()
     services = Services()
     clients = Clients()
-
     with app.app_context():
         app.create_tables()
         yield app, services, clients

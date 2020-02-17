@@ -41,6 +41,7 @@ class BaseModel(TimestampMixin, Base):
         try:
             return cls.find(**kwargs).one()
         except NoResultFound:
+            Database().session.rollback()
             raise ModelDoesNotExistException(cls.__name__)
 
     @classmethod
