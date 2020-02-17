@@ -28,7 +28,7 @@ python-ledgercommon = {version = "==1.1.14",index = "fury"}
 sqlalchemy = "*"
 marshmallow-sqlalchemy = "*"
 flask-sqlalchemy = "*"
-psycopg2 = "*"
+psycopg2-binary = "*"
 pyyaml = "*"
 
 [scripts]
