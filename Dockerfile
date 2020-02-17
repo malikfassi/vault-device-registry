@@ -5,8 +5,8 @@ FROM python:3.8-slim AS intermediate
 ADD . /app
 WORKDIR /app
 
-ARG PYPI_KEY
-ENV PYPI_KEY $PYPI_KEY
+ARG PYPI_DEPLOY_TOKEN
+ENV PYPI_DEPLOY_TOKEN $PYPI_DEPLOY_TOKEN
 RUN /app/install_pip_deps.sh
 
 FROM python:3.8-slim

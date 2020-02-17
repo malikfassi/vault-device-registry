@@ -4,9 +4,46 @@ orbs:
   docker: ledger/docker@volatile
 
 jobs:
+  unit_tests:
+    docker:
+      - image: python:3.8
+      - image: circleci/postgres:11.1-alpine-ram
+        environment:
+          POSTGRES_USER: postgres
+          POSTGRES_PASSWORD: postgres
+          POSTGRES_DB: device_registry
+    working_directory: ~/vault-device-registry
+    steps:
+      - checkout
+      - restore_cache:
+          keys:
+            - vault-device-registry-pip-cache-v4-{{ checksum "Pipfile.lock" }}
+            - vault-device-registry-pip-cache-v4-
+      - run: python --version
+      - run: apt-get -qy update
+      - run: apt-get -qy install libtool libssl-dev build-essential automake pkg-config libtool libffi-dev libgmp-dev libpython-dev libyaml-cpp-dev libusb-1.0-0-dev libsecp256k1-dev libudev-dev
+      - run: pip install -U pipenv
+      - run: pipenv install --dev
+      - run: pipenv run test --cov=./api
+
+      - save_cache:
+          key: vault-device-registry-pip-cache-v4-{{ checksum "Pipfile.lock" }}
+          paths:
+            - pipenv --venv
+            - "~/.cache/pip"
+      - run:
+          when: on_success
+          command: pipenv run codecov
   lint_and_test:
     docker:
       - image: circleci/python:3.8
+
+      - image: circleci/postgres:11.1-alpine-ram
+        environment:
+          POSTGRES_USER: postgres
+          POSTGRES_PASSWORD: postgres
+          POSTGRES_DB: device_registry
+
     working_directory: ~/vault-device-registry
     steps:
       - checkout
@@ -33,7 +70,7 @@ jobs:
           name: Test service
           command: |
             sleep 5
-            curl localhost:5000/_health
+            curl localhost:5002/_health
       - save_cache:
           key: vault-device-registry-pip-cache-v1-{{ checksum "Pipfile.lock" }}
           paths:
@@ -50,8 +87,9 @@ workflows:
             tags:
               only: /.*/
       - docker/build_image:
+          context: dockerhub
           # Generate a deploy key on github and add it to this repo's env vars
-          docker_build_args: --build-arg PYPI_KEY
+          docker_build_args: --build-arg PYPI_DEPLOY_TOKEN
           requires:
             - lint_and_test
           filters:
@@ -62,19 +100,21 @@ workflows:
             tags:
               only: /.*/
       - docker/test_image:
+          context: dockerhub
           docker_compose_configuration: docker-compose_circleci.yml
           docker_compose_env_vars: |-
             POSTGRES_VERSION=11.1-alpine-ram
             POSTGRES_USER=postgres
             POSTGRES_PASSWORD=postgres
-            POSTGRES_DB=test_db
+            POSTGRES_DB=device_registry
           # each goss run needs to start from a fresh docker-compose environment
           docker_compose_single_use: true
           dgoss_docker_env_vars: |-
-            HOST=localhost
-            PROCESS_TIMEOUT=30
-            MAX_NUMBER_OF_PROCESSES=4
-            MIN_NUMBER_OF_PROCESSES=2
+            VAULT_DEVICE_REGISTRY_DATABASE_HOST=postgres-server
+            VAULT_DEVICE_REGISTRY_HOST=localhost
+            VAULT_DEVICE_REGISTRY_PROCESS_TIMEOUT=30
+            VAULT_DEVICE_REGISTRY_MAX_NUMBER_OF_PROCESSES=4
+            VAULT_DEVICE_REGISTRY_MIN_NUMBER_OF_PROCESSES=2
           requires:
             - docker/build_image
           filters:
@@ -85,6 +125,7 @@ workflows:
             tags:
               only: /.*/
       - docker/publish_image:
+          context: dockerhub
           requires:
             - docker/test_image
           filters:
