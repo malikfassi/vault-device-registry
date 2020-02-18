@@ -11,27 +11,21 @@ class DevicesService:
     def register(cls, device_data: DeviceRegisterParameters):
         try:
             new_device = Device(
-                workspace=device_data.workspace, pub_key=device_data.pub_key
+                workspace=device_data.workspace,
+                pub_key=device_data.pub_key,
+                active=(device_data.status == "ACTIVE"),
             )
             new_device.save()
         except ModelAlreadyExistException:
-            cls.activate(device_data)
+            cls.update_status(device_data)
         return True
 
     @classmethod
-    def deactivate(cls, device_data: DeviceRegisterParameters):
+    def update_status(cls, device_data: DeviceRegisterParameters):
         device = Device.get(
             pub_key=device_data.pub_key, workspace=device_data.workspace
         )
-        device.deactivate()
-        return True
-
-    @classmethod
-    def activate(cls, device_data: DeviceRegisterParameters):
-        device = Device.get(
-            pub_key=device_data.pub_key, workspace=device_data.workspace
-        )
-        device.activate()
+        device.update_active(device_data.status == "ACTIVE")
         return True
 
     @classmethod

@@ -24,13 +24,6 @@ class DevicesController:
 
     @staticmethod
     @devices_routes.route(
-        "/deactivate", methods=["POST"], request_model=DeviceRegisterParameters
-    )
-    def deactivate_device(request_args: DeviceRegisterParameters):
-        DevicesController.devices_service.deactivate(request_args)
-
-    @staticmethod
-    @devices_routes.route(
         "/device", methods=["GET"], request_model=DeviceSearchParameters
     )
     def get_workspaces(request_args: DeviceSearchParameters):

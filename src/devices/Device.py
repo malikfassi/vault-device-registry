@@ -17,10 +17,6 @@ class Device(BaseModel):
     def __repr__(self):
         return f"<Device(name={self.pub_key})>"
 
-    def activate(self):
-        self.active = True
-        self.save()
-
-    def deactivate(self):
-        self.active = False
+    def update_active(self, is_active: bool):
+        self.active = is_active
         self.save()
