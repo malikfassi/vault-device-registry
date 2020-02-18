@@ -5,6 +5,7 @@ from ledgercommon.schema import BaseModel, dataclass
 class DeviceRegisterParameters(BaseModel):
     pub_key: str
     workspace: str
+    status: str
 
 
 @dataclass
