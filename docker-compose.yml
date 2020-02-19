@@ -4,17 +4,17 @@ services:
   vault-device-registry:
     image: ledgerhq/vault-device-registry:${DOCKER_IMAGE_VERSION:-develop}
     environment:
-      - APP_NAME=vault_device_registry
-      - HOST=0.0.0.0
-      - PROCESS_TIMEOUT=120
-      - MAX_NUMBER_OF_PROCESSES=4
-      - MIN_NUMBER_OF_PROCESSES=2
-      - FLASK_DEBUG=1
-      - DATABASE_HOST=vault-device-registry-db
-      - DATABASE_SCHEMA=test_db
-      - DATABASE_USER=postgres
-      - DATABASE_PASSWORD=postgres
-      - DATABASE_PORT=5432
+      - VAULT_DEVICE_REGISTRY_APP_NAME=vault_device_registry
+      - VAULT_DEVICE_REGISTRY_HOST=0.0.0.0
+      - VAULT_DEVICE_REGISTRY_PROCESS_TIMEOUT=120
+      - VAULT_DEVICE_REGISTRY_MAX_NUMBER_OF_PROCESSES=4
+      - VAULT_DEVICE_REGISTRY_MIN_NUMBER_OF_PROCESSES=2
+      - VAULT_DEVICE_REGISTRY_FLASK_DEBUG=1
+      - VAULT_DEVICE_REGISTRY_DATABASE_HOST=vault-device-registry-db
+      - VAULT_DEVICE_REGISTRY_DATABASE_SCHEMA=test_db
+      - VAULT_DEVICE_REGISTRY_DATABASE_USER=postgres
+      - VAULT_DEVICE_REGISTRY_DATABASE_PASSWORD=postgres
+      - VAULT_DEVICE_REGISTRY_DATABASE_PORT=5432
     ports:
       - 5002:5002
     depends_on:

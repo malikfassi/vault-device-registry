@@ -24,7 +24,7 @@ pytest-sugar = "*"
 Flask = "*"
 Flask-Cors = "*"
 uWSGI = "*"
-python-ledgercommon = {version = "==1.1.14",index = "fury"}
+python-ledgercommon = {version = "==1.2.0",index = "fury"}
 sqlalchemy = "*"
 marshmallow-sqlalchemy = "*"
 flask-sqlalchemy = "*"

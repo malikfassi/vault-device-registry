@@ -7,13 +7,16 @@ from ledgercommon.flask.routes import RequestsFilter, FUNCTION_FILTERS
 from flask_cors import CORS
 from flask import g
 
+from src.common.Config import Config
 from src.common.Database import Database
 
 
 class App(Flask):
+
+    config_class = Config
+
     def __init__(self):
         super().__init__(__name__)
-
         self.json_encoder = CustomJSONEncoder
 
         self.config.from_yaml('conf.yaml')
@@ -30,7 +33,6 @@ class App(Flask):
         self.register_routes()
 
         self.request_filter = RequestsFilter(FUNCTION_FILTERS)
-
         self.config_service.info()
 
         @self.errorhandler(Exception)
