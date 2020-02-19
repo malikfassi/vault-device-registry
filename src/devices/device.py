@@ -1,7 +1,7 @@
 import sqlalchemy as sa
 from sqlalchemy import UniqueConstraint
 
-from src.common.BaseModel import BaseModel
+from src.common.base_model import BaseModel
 
 
 class Device(BaseModel):

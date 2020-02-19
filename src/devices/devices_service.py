@@ -1,6 +1,6 @@
 from src.common.exceptions import ModelAlreadyExistException
-from src.devices.Device import Device
-from src.devices.DevicesParemeters import (
+from src.devices.device import Device
+from src.devices.devices_parameters import (
     DeviceRegisterParameters,
     DeviceSearchParameters,
 )

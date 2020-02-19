@@ -1,8 +1,8 @@
 import os
 
-from src.common.Config import Config
-from src.common.Database import Database
-from src.devices.Device import Device
+from src.common.config import Config
+from src.common.database import Database
+from src.devices.device import Device
 
 SCRIPT_PATH = os.path.realpath(__file__)
 ROOT_PATH = os.path.dirname(SCRIPT_PATH)

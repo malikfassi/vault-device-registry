@@ -24,12 +24,12 @@ class Database(SQLAlchemy):
 
     def create_all_tables(self):
         engine = self.get_engine_from_conf()
-        from src.common.BaseModel import Base
+        from src.common.base_model import Base
         Base.metadata.create_all(bind=engine)
 
     def drop_all_tables(self):
         engine = self.get_engine_from_conf()
-        from src.common.BaseModel import Base
+        from src.common.base_model import Base
         Base.metadata.drop_all(bind=engine)
 
     def _get_uri(self):

@@ -1,11 +1,11 @@
 import structlog  # type: ignore
 from ledgercommon.flask.routes import Blueprint, FilterTypes
 
-from src.devices.DevicesParemeters import (
+from src.devices.devices_parameters import (
     DeviceRegisterParameters,
     DeviceSearchParameters,
 )
-from src.devices.DevicesService import DevicesService
+from src.devices.devices_service import DevicesService
 
 logger = structlog.get_logger(__name__)
 

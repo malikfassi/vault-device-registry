@@ -1,6 +1,6 @@
 import pytest
 
-from src.devices.DevicesService import DevicesService
+from src.devices.devices_service import DevicesService
 from tests.src.test_utils.test_app import TestApp
 
 

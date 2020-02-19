@@ -7,8 +7,8 @@ from ledgercommon.flask.routes import RequestsFilter, FUNCTION_FILTERS
 from flask_cors import CORS
 from flask import g
 
-from src.common.Config import Config
-from src.common.Database import Database
+from src.common.config import Config
+from src.common.database import Database
 
 
 class App(Flask):

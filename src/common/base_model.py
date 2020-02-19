@@ -5,7 +5,7 @@ from sqlalchemy.ext.declarative import declarative_base, declared_attr
 from sqlalchemy.orm.exc import NoResultFound
 from sqlalchemy.sql.functions import now
 
-from src.common.Database import Database
+from src.common.database import Database
 from src.common.exceptions import ModelAlreadyExistException, ModelDoesNotExistException
 
 

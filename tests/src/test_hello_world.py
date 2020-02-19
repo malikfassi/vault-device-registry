@@ -1,5 +1,5 @@
-from src.devices.Device import Device
-from src.devices.DevicesParemeters import DeviceRegisterParameters, DeviceSearchParameters
+from src.devices.device import Device
+from src.devices.devices_parameters import DeviceRegisterParameters, DeviceSearchParameters
 
 
 def test_register_device(app, services):
