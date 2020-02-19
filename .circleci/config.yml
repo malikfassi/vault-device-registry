@@ -106,7 +106,7 @@ workflows:
             POSTGRES_VERSION=11.1-alpine-ram
             POSTGRES_USER=postgres
             POSTGRES_PASSWORD=postgres
-            POSTGRES_DB=test_db
+            POSTGRES_DB=device_registry
           # each goss run needs to start from a fresh docker-compose environment
           docker_compose_single_use: true
           dgoss_docker_env_vars: |-
