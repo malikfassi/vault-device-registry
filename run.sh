@@ -12,4 +12,5 @@ else
     ini_file=uwsgi.ini
 fi
 
+python create_tables.py
 exec uwsgi -H $(pipenv --venv) --ini ${ini_file}
