@@ -1,5 +1,21 @@
+from pytest import raises
+
+from src.common.exceptions import ModelAlreadyExistException, ModelDoesNotExistException
 from src.devices.device import Device
 from src.devices.devices_parameters import DeviceRegisterParameters, DeviceSearchParameters
+
+
+def test_register_device_already_exist(app, services):
+    pub_key = 'abc'
+    workspace = 'toto'
+    device_data = DeviceRegisterParameters(pub_key=pub_key, workspace=workspace, status='ACTIVE')
+    services.devices_service.register(device_data)
+    with raises(ModelAlreadyExistException):
+        services.devices_service.register(device_data)
+    registered_data = Device.find(pub_key=pub_key)
+    assert registered_data.count() == 1
+    assert registered_data[0].workspace == workspace
+    assert registered_data[0].pub_key == pub_key
 
 
 def test_register_device(app, services):
@@ -11,6 +27,7 @@ def test_register_device(app, services):
     assert registered_data.count() == 1
     assert registered_data[0].workspace == workspace
     assert registered_data[0].pub_key == pub_key
+
 
 def test_register_same_device_in_two_workspaces(app, services):
     pub_key = 'abc'
@@ -30,6 +47,7 @@ def test_register_same_device_in_two_workspaces(app, services):
     assert registered_data[1].pub_key == pub_key
     assert registered_data[1].active == True
 
+
 def test_get_workpace_by_pub_key(app, services):
     workspace = 'toto'
     pub_key = 'abcdef'
@@ -39,6 +57,7 @@ def test_get_workpace_by_pub_key(app, services):
     fetched_data = services.devices_service.get_workspaces(device_search_data)
     assert len(fetched_data) == 1
     assert fetched_data[0] == workspace
+
 
 def test_get_workspaces_by_pub_key_multiple(app, services):
     workspace = 'toto'
@@ -54,18 +73,28 @@ def test_get_workspaces_by_pub_key_multiple(app, services):
     assert fetched_data[0] == workspace
     assert fetched_data[1] == workspace2
 
+
 def test_get_workpaces_by_pub_key_not_found(app, services):
     device_search_data = DeviceSearchParameters(pub_key='unknown')
     fetched_data = services.devices_service.get_workspaces(device_search_data)
     assert len(fetched_data) == 0
 
-def test_deactivate_device(app, services):
+
+def test_update_device_does_not_exist(app, services):
+    pub_key = 'abcd'
+    workspace = 'toto'
+    device_data = DeviceRegisterParameters(pub_key=pub_key, workspace=workspace, status='SUSPENDED')
+    with raises(ModelDoesNotExistException):
+        services.devices_service.update(device_data)
+
+
+def test_update_device(app, services):
     pub_key = 'abcd'
     workspace = 'toto'
     device_data = DeviceRegisterParameters(pub_key=pub_key, workspace=workspace, status='ACTIVE')
     services.devices_service.register(device_data)
     device_data = DeviceRegisterParameters(pub_key=pub_key, workspace=workspace, status='SUSPENDED')
-    services.devices_service.register(device_data)
+    services.devices_service.update(device_data)
     device_search_data = DeviceSearchParameters(pub_key=pub_key)
 
     # do not fetch deactivated data
@@ -77,7 +106,8 @@ def test_deactivate_device(app, services):
     assert registered_data[0].workspace == workspace
     assert registered_data[0].active == False
 
-def register_deactivated_device(app, services):
+
+def register_update_not_active_device(app, services):
     pub_key = 'abcd'
     workspace = 'toto'
     device_data = DeviceRegisterParameters(pub_key=pub_key, workspace=workspace, status='SUSPENDED')
@@ -94,7 +124,7 @@ def register_deactivated_device(app, services):
     fetched_data = services.devices_service.get_workspaces(device_search_data)
     assert len(fetched_data) == 0
 
-    services.devices_service.register(device_data)
+    services.devices_service.update(device_data)
 
     fetched_data = services.devices_service.get_workspaces(device_search_data)
     assert len(fetched_data) == 1

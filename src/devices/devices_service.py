@@ -1,4 +1,5 @@
-from src.common.exceptions import ModelAlreadyExistException
+from typing import List
+
 from src.devices.device import Device
 from src.devices.devices_parameters import (
     DeviceRegisterParameters,
@@ -9,27 +10,18 @@ from src.devices.devices_parameters import (
 class DevicesService:
     @classmethod
     def register(cls, device_data: DeviceRegisterParameters):
-        try:
-            new_device = Device(
-                workspace=device_data.workspace,
-                pub_key=device_data.pub_key,
-                active=(device_data.status == "ACTIVE"),
-            )
-            new_device.save()
-        except ModelAlreadyExistException:
-            cls.update_status(device_data)
-        return True
+        new_device = Device(workspace=device_data.workspace, pub_key=device_data.pub_key, active=(device_data.status == "ACTIVE"))
+        new_device.save()
 
     @classmethod
-    def update_status(cls, device_data: DeviceRegisterParameters):
+    def update(cls, device_data: DeviceRegisterParameters):
         device = Device.get(
             pub_key=device_data.pub_key, workspace=device_data.workspace
         )
         device.update_active(device_data.status == "ACTIVE")
-        return True
 
     @classmethod
-    def get_workspaces(cls, device_data: DeviceSearchParameters):
+    def get_workspaces(cls, device_data: DeviceSearchParameters) -> List[str]:
         return [
             device.workspace
             for device in Device.find(pub_key=device_data.pub_key, active=True)

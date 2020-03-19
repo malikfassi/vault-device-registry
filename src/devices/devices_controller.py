@@ -17,10 +17,17 @@ class DevicesController:
 
     @staticmethod
     @devices_routes.route(
-        "/register", methods=["POST"], request_model=DeviceRegisterParameters
+        "/device", methods=["POST"], request_model=DeviceRegisterParameters
     )
     def register_device(request_args: DeviceRegisterParameters):
         DevicesController.devices_service.register(request_args)
+
+    @staticmethod
+    @devices_routes.route(
+        "/device", methods=["PUT"], request_model=DeviceRegisterParameters
+    )
+    def update_device(request_args: DeviceRegisterParameters):
+        DevicesController.devices_service.update(request_args)
 
     @staticmethod
     @devices_routes.route(
